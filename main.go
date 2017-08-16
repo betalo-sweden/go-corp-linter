@@ -29,7 +29,7 @@ func findImportViolations(fp string, fi os.FileInfo, err error) error {
 	if fi.IsDir() {
 		return nil
 	}
-	if strings.Contains(fp, "/vendor/") {
+	if strings.Contains(fp, "vendor/") {
 		return nil
 	}
 	if !strings.HasSuffix(fi.Name(), ".go") {
