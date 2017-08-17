@@ -33,7 +33,7 @@ func findImportViolations(fp string, fi os.FileInfo, err error) error {
 	if fi.IsDir() {
 		if fp == "." {
 			return nil
-		} else {
+		}
 			return filepath.SkipDir
 		}
 	}
