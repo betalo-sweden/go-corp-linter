@@ -1,0 +1,8 @@
+# Copyright (C) 2017 Betalo AB - All Rights Reserved
+
+# Test
+
+[[constraint]]
+  name = "github.com/stretchr/testify"
+  #version = "v1.1.4"
+  revision = "4d4bfba8f1d1027c4fdbe371823030df51419987"
