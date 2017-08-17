@@ -21,32 +21,33 @@ func main() {
 	}
 
 	for _, dir := range dirs {
-		filepath.Walk(dir, findImportViolations)
+		filepath.Walk(dir, findImportViolations(dirs[0]))
 	}
 }
 
-func findImportViolations(fp string, fi os.FileInfo, err error) error {
-	if err != nil {
-		log.Println("Error:", err)
-		return nil
-	}
-	if fi.IsDir() {
-		if fp == "." {
+func findImportViolations(root string) func(fp string, fi os.FileInfo, err error) error {
+	return func(fp string, fi os.FileInfo, err error) error {
+		if err != nil {
+			log.Println("Error:", err)
 			return nil
 		}
+		if fi.IsDir() {
+			if fp == root {
+				return nil
+			}
 			return filepath.SkipDir
 		}
-	}
-	if strings.Contains(fp, "vendor/") {
-		return nil
-	}
-	if !strings.HasSuffix(fi.Name(), ".go") {
-		return nil
-	}
+		if strings.Contains(fp, "vendor/") {
+			return nil
+		}
+		if !strings.HasSuffix(fi.Name(), ".go") {
+			return nil
+		}
 
-	if err = imports.Rule(fp); err != nil {
+		if err = imports.Rule(fp); err != nil {
+			return nil
+		}
+
 		return nil
 	}
-
-	return nil
 }
