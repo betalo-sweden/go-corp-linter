@@ -31,6 +31,21 @@ var testcases = []struct {
 		expected: "",
 	},
 	{
+		name:     "empty",
+		given:    ``,
+		expected: "",
+	},
+	{
+		name:     "noStdlib",
+		given:    `"github.com/stretchr/testify/assert"`,
+		expected: "",
+	},
+	{
+		name:     "onlyStdlib",
+		given:    `"io"`,
+		expected: "",
+	},
+	{
 		name: "unsortedStdlib",
 		given: `
 				"flag"
