@@ -65,6 +65,24 @@ var testcases = []struct {
 				`,
 		expected: "main.go:4:5:error: incorrectly sorted import package: github.com/stretchr/testify/assert",
 	},
+	{
+		name: "othersNotSorted",
+		given: `
+				"context"
+				"crypto/md5"
+				"encoding/hex"
+				"fmt"
+				"net/http"
+				"net/url"
+				"strings"
+				"time"
+
+				"github.com/betalo-sweden/pkg/log"
+				"go.uber.org/zap"
+				"github.com/betalo-sweden/pkg/router/middleware"
+				`,
+		expected: "main.go:14:5:error: incorrectly sorted import package: go.uber.org/zap",
+	},
 }
 
 func TestProcessImports(t *testing.T) {
