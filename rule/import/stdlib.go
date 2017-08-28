@@ -11,6 +11,7 @@ import (
 )
 
 func isStdlib(path string) bool {
+
 	for _, p := range stdlibPkgs {
 		if p == path {
 			return true
