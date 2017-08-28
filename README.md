@@ -11,4 +11,5 @@ Go linter for corporate environments.
 
 ## License
 
+
 > Copyright (C) 2017 Betalo AB - All Rights Reserved
