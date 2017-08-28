@@ -4,6 +4,7 @@ package main
 
 import (
 	"flag"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -21,11 +22,11 @@ func main() {
 	}
 
 	for _, dir := range dirs {
-		filepath.Walk(dir, findImportViolations(dirs[0]))
+		filepath.Walk(dir, findImportViolations(dirs[0], os.Stdout))
 	}
 }
 
-func findImportViolations(root string) func(fp string, fi os.FileInfo, err error) error {
+func findImportViolations(root string, out io.Writer) func(fp string, fi os.FileInfo, err error) error {
 	return func(fp string, fi os.FileInfo, err error) error {
 		if err != nil {
 			log.Println("Error:", err)
@@ -44,7 +45,7 @@ func findImportViolations(root string) func(fp string, fi os.FileInfo, err error
 			return nil
 		}
 
-		if err = imports.Rule(fp); err != nil {
+		if err = imports.ProcessFile(fp, out); err != nil {
 			return nil
 		}
 
