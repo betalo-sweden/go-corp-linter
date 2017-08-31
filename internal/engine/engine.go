@@ -16,7 +16,7 @@ import (
 // violations.
 func Process(dirs []string, out io.Writer, verboseMode bool) {
 	for _, dir := range dirs {
-		filepath.Walk(dir, findImportViolations(dirs[0], out, verboseMode))
+		filepath.Walk(dir, findImportViolations(dir, out, verboseMode))
 	}
 }
 
