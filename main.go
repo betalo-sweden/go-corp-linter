@@ -10,12 +10,16 @@ import (
 )
 
 func main() {
+	verboseFlag := flag.Bool("v", false, "verbose output mode")
+	verboseLongFlag := flag.Bool("verbose", false, "verbose output mode")
 	flag.Parse()
 	dirs := flag.Args()
+
+	verboseMode := *verboseFlag || *verboseLongFlag
 
 	if len(dirs) == 0 {
 		dirs = []string{"."}
 	}
 
-	engine.Process(dirs, os.Stdout)
+	engine.Process(dirs, os.Stdout, verboseMode)
 }
