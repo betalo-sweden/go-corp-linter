@@ -16,7 +16,7 @@ func TestWalk(t *testing.T) {
 
 	// Act
 
-	Process([]string{"testdata", "testdata/foo", "testdata/foo/bar"}, w, false)
+	Process([]string{"../../testdata", "../../testdata/foo", "../../testdata/foo/bar"}, w, false)
 	w.Flush()
 
 	// Assert
