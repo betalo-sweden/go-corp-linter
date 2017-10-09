@@ -31,7 +31,7 @@ install:
 
 .PHONY: lint
 lint:
-	gometalinter --vendor --tests --disable=gocyclo --disable=dupl --disable=deadcode --disable=gotype --disable=errcheck --disable=aligncheck --disable=unconvert --disable=interfacer --disable=varcheck --disable=gas --disable=megacheck --enable=go-corp-linter --linter='go-corp-linter:go-corp-linter:PATH:LINE:MESSAGE' ./internal/...
+	gometalinter --vendor --tests --disable=gocyclo --disable=dupl --disable=deadcode --disable=gotype --disable=errcheck --disable=maligned --disable=unconvert --disable=interfacer --disable=varcheck --disable=gas --disable=megacheck --enable=go-corp-linter --linter='go-corp-linter:go-corp-linter:PATH:LINE:MESSAGE' ./internal/...
 
 .PHONY: test
 test:
