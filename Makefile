@@ -44,7 +44,7 @@ lint:
 	    --disable=gas \
 	    --disable=megacheck \
 	    --enable=go-corp-linter \
-	    --linter='go-corp-linter:go-corp-linter:PATH:LINE:MESSAGE' \
+	    --linter='go-corp-linter:go-corp-linter:PATH:LINE:COL:MESSAGE' \
 	    ./internal/...
 
 .PHONY: test

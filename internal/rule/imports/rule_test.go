@@ -54,7 +54,7 @@ var testcases = []struct {
 				"path/filepath"
 				"strings"
 				`,
-		expected: "main.go:5:5:error: incorrectly sorted import package: os",
+		expected: "main.go:5:5: incorrectly sorted import package: os",
 	},
 	{
 		name: "redundantGrouping",
@@ -66,7 +66,7 @@ var testcases = []struct {
 				"path/filepath"
 				"strings"
 				`,
-		expected: "main.go:8:5:error: incorrectly sorted import package: path/filepath",
+		expected: "main.go:8:5: incorrectly sorted import package: path/filepath",
 	},
 	{
 		name: "stdlibAndOthersMixed",
@@ -78,7 +78,7 @@ var testcases = []struct {
 				"path/filepath"
 				"strings"
 				`,
-		expected: "main.go:4:5:error: incorrectly sorted import package: github.com/stretchr/testify/assert",
+		expected: "main.go:4:5: incorrectly sorted import package: github.com/stretchr/testify/assert",
 	},
 	{
 		name: "othersNotSorted",
@@ -96,7 +96,7 @@ var testcases = []struct {
 				"go.uber.org/zap"
 				"github.com/betalo-sweden/pkg/router/middleware"
 				`,
-		expected: "main.go:14:5:error: incorrectly sorted import package: go.uber.org/zap",
+		expected: "main.go:14:5: incorrectly sorted import package: go.uber.org/zap",
 	},
 }
 
