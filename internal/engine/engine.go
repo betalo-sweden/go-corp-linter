@@ -14,10 +14,14 @@ import (
 
 // Process walks a given sequence of directories and tries to identify rule
 // violations.
-func Process(dirs []string, out io.Writer, verboseMode bool) {
+func Process(dirs []string, out io.Writer, verboseMode bool) error {
 	for _, dir := range dirs {
-		filepath.Walk(dir, findImportViolations(dir, out, verboseMode))
+		err := filepath.Walk(dir, findImportViolations(dir, out, verboseMode))
+		if err != nil {
+			return err
+		}
 	}
+	return nil
 }
 
 func findImportViolations(root string, out io.Writer, verbose bool) func(fp string, fi os.FileInfo, err error) error {

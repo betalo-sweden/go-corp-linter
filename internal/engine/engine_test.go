@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestWalk(t *testing.T) {
@@ -16,8 +17,9 @@ func TestWalk(t *testing.T) {
 
 	// Act
 
-	Process([]string{"../../testdata", "../../testdata/foo", "../../testdata/foo/bar"}, w, false)
-	w.Flush()
+	err := Process([]string{"../../testdata", "../../testdata/foo", "../../testdata/foo/bar"}, w, false)
+	require.NoError(t, err)
+	require.NoError(t, w.Flush())
 
 	// Assert
 

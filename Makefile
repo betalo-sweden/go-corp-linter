@@ -38,9 +38,7 @@ lint:
 	    --disable=dupl \
 	    --disable=deadcode \
 	    --disable=gotype \
-	    --disable=errcheck \
 	    --disable=maligned \
-	    --disable=unconvert \
 	    --disable=interfacer \
 	    --disable=varcheck \
 	    --disable=gas \

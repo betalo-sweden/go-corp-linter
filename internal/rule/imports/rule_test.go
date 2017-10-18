@@ -111,7 +111,7 @@ func TestProcessImports(t *testing.T) {
 			var b bytes.Buffer
 			w := bufio.NewWriter(&b)
 			processImports(f, fset, w)
-			w.Flush()
+			require.NoError(t, w.Flush())
 			assert.Equal(t, tc.expected, strings.TrimSpace(b.String()))
 		})
 	}
