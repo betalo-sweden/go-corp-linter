@@ -113,6 +113,6 @@ func compare(given, expected []importStmt) int {
 }
 
 func report(out io.Writer, i importStmt) {
-	fmt.Fprintf(out, "%s:%d:%d:error: incorrectly sorted import package: %s\n",
+	fmt.Fprintf(out, "%s:%d:%d: incorrectly sorted import package: %s\n",
 		i.loc.filename, i.loc.line, i.loc.col, i.pkg)
 }

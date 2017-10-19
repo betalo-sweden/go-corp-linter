@@ -4,10 +4,16 @@ package main
 
 import (
 	"flag"
+	"log"
 	"os"
 
 	"github.com/betalo-sweden/go-corp-linter/internal/engine"
 )
+
+func init() {
+	log.SetFlags(0)
+	log.SetPrefix("")
+}
 
 func main() {
 	verboseFlag := flag.Bool("v", false, "verbose output mode")
@@ -21,5 +27,8 @@ func main() {
 		dirs = []string{"."}
 	}
 
-	engine.Process(dirs, os.Stdout, verboseMode)
+	err := engine.Process(dirs, os.Stdout, verboseMode)
+	if err != nil {
+		log.Fatalln("Error:", err)
+	}
 }
