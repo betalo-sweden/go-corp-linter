@@ -7,7 +7,7 @@ notifications:
 language: go
 
 go:
-  - 1.8
+  - 1.9
 
 install:
   - make deps
