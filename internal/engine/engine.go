@@ -34,15 +34,18 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 			log.Println("Error:", err)
 			return nil
 		}
+
 		if fi.IsDir() {
 			if fp == root {
 				return nil
 			}
 			return filepath.SkipDir
 		}
+
 		if strings.Contains(fp, "vendor/") {
 			return nil
 		}
+
 		if !strings.HasSuffix(fi.Name(), ".go") {
 			return nil
 		}
