@@ -51,7 +51,7 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 		}
 
 		if err = imports.ProcessFile(fp, out); err != nil {
-			return nil
+			return err
 		}
 
 		return nil

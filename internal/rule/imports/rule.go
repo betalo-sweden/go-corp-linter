@@ -20,7 +20,7 @@ func ProcessFile(fp string, out io.Writer) error {
 	f, err := parser.ParseFile(fset, fp, nil, parser.ImportsOnly)
 	if err != nil {
 		log.Println("Error: parsing dir:", err)
-		return nil
+		return err
 	}
 
 	processImports(f, fset, out)
