@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
+	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
 )
 
 // Process walks a given sequence of directories and tries to identify rule
@@ -51,6 +52,9 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 		}
 
 		if err = imports.ProcessFile(fp, out); err != nil {
+			return err
+		}
+		if err = writeerror.ProcessFile(fp, out); err != nil {
 			return err
 		}
 
