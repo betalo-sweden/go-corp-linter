@@ -13,13 +13,13 @@ import (
 	"strings"
 )
 
-// ProcessFile checks for import statement violatoins in source code files and
+// ProcessFile checks for import statement violations in source code files and
 // reports them.
 func ProcessFile(fp string, out io.Writer) error {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, fp, nil, parser.ImportsOnly)
 	if err != nil {
-		log.Println("Error: parsing dir:", err)
+		log.Println("Error: parsing file:", err)
 		return err
 	}
 
