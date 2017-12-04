@@ -43,6 +43,8 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 			return filepath.SkipDir
 		}
 
+		// Excludes
+
 		if strings.Contains(fp, "vendor/") {
 			return nil
 		}
@@ -50,6 +52,8 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 		if !strings.HasSuffix(fi.Name(), ".go") {
 			return nil
 		}
+
+		// Rules
 
 		if err = imports.ProcessFile(fp, out); err != nil {
 			return err
