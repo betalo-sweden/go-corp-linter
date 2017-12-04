@@ -23,7 +23,7 @@ func ProcessFile(fp string, out io.Writer) error {
 	return nil
 }
 
-func findMissingReturn(f *ast.File, fset *token.FileSet, out io.Writer) {
+func findMissingReturn(f ast.Node, fset *token.FileSet, out io.Writer) {
 	var v NodeVisitor = newFindMissingReturnsVisitor(fset, out)
 	ast.Inspect(f, v.Visit)
 }
