@@ -66,7 +66,7 @@ type FindMissingReturnsVisitor struct {
 //   6     found third  parameter: error
 //   7   found *ast.ReturnStmt with no results/arguments
 //
-// Currently, for simplicity and suffiency, only states 0, 2, and 7 are
+// Currently, for simplicity and sufficiency, only states 0, 2, and 7 are
 // implemented.
 func (v *FindMissingReturnsVisitor) Visit(n ast.Node) bool {
 	// fmt.Printf("Debug: %d %T %+v %#v\n", level, n, n, n)
