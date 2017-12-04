@@ -31,7 +31,13 @@ install:
 
 .PHONY: lint
 lint:
-	gometalinter \
+	@if [ $$(gofmt -l . | grep -v vendor/ | wc -l) != 0 ]; then \
+	    echo "gofmt: code not formatted"; \
+	    gofmt -l . | grep -v vendor/; \
+	    exit 1; \
+	fi
+
+	@gometalinter \
 	    --vendor \
 	    --tests \
 	    --disable=gocyclo \
