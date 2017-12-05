@@ -13,7 +13,7 @@ import (
 // `writeError` function.
 func ProcessFile(fp string, out io.Writer) error {
 	fset := token.NewFileSet()
-	f, err := parser.ParseFile(fset, fp, nil, parser.ImportsOnly)
+	f, err := parser.ParseFile(fset, fp, nil, 0)
 	if err != nil {
 		log.Println("Error: parsing file:", err)
 		return err
