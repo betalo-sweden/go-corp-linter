@@ -92,11 +92,11 @@ var testcases = []struct {
 				"strings"
 				"time"
 
-				"github.com/betalo-sweden/pkg/log"
 				"go.uber.org/zap"
-				"github.com/betalo-sweden/pkg/router/middleware"
+				"github.com/golang/dep"
+				"github.com/golang/go"
 				`,
-		expected: "main.go:14:5: incorrectly sorted import package: go.uber.org/zap",
+		expected: "main.go:13:5: incorrectly sorted import package: go.uber.org/zap",
 	},
 }
 

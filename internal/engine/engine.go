@@ -10,13 +10,14 @@ import (
 	"strings"
 
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
+	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
 )
 
 // Process walks a given sequence of directories and tries to identify rule
 // violations.
 func Process(dirs []string, out io.Writer, verboseMode bool) error {
 	for _, dir := range dirs {
-		err := filepath.Walk(dir, findImportViolations(dir, out, verboseMode))
+		err := filepath.Walk(dir, process(dir, out, verboseMode))
 		if err != nil {
 			return err
 		}
@@ -24,7 +25,7 @@ func Process(dirs []string, out io.Writer, verboseMode bool) error {
 	return nil
 }
 
-func findImportViolations(root string, out io.Writer, verbose bool) func(fp string, fi os.FileInfo, err error) error {
+func process(root string, out io.Writer, verbose bool) func(fp string, fi os.FileInfo, err error) error {
 	return func(fp string, fi os.FileInfo, err error) error {
 		if verbose {
 			log.Println("Debug: processing", fp)
@@ -34,21 +35,31 @@ func findImportViolations(root string, out io.Writer, verbose bool) func(fp stri
 			log.Println("Error:", err)
 			return nil
 		}
+
 		if fi.IsDir() {
 			if fp == root {
 				return nil
 			}
 			return filepath.SkipDir
 		}
+
+		// Excludes
+
 		if strings.Contains(fp, "vendor/") {
 			return nil
 		}
+
 		if !strings.HasSuffix(fi.Name(), ".go") {
 			return nil
 		}
 
+		// Rules
+
 		if err = imports.ProcessFile(fp, out); err != nil {
-			return nil
+			return err
+		}
+		if err = writeerror.ProcessFile(fp, out); err != nil {
+			return err
 		}
 
 		return nil

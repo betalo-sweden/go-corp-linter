@@ -15,13 +15,22 @@ func TestWalk(t *testing.T) {
 	var buf bytes.Buffer
 	w := bufio.NewWriter(&buf)
 
+	givenDirs := []string{
+		"../../testdata",
+		"../../testdata/foo",
+		"../../testdata/foo/bar",
+		"../../testdata/vendor",
+	}
+
 	// Act
 
-	err := Process([]string{"../../testdata", "../../testdata/foo", "../../testdata/foo/bar"}, w, false)
+	err := Process(givenDirs, w, false)
 	require.NoError(t, err)
 	require.NoError(t, w.Flush())
 
 	// Assert
 
 	assert.Contains(t, buf.String(), `testdata/foo/bar/main.go`)
+	assert.NotContains(t, buf.String(), `testdata/foo/bar/main.js`)
+	assert.NotContains(t, buf.String(), `testdata/vendor/foo/bar/main.go`)
 }

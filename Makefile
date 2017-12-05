@@ -9,7 +9,7 @@ build:
 
 .PHONY: copyright
 copyright:
-	find . -type f -name '*.go' -exec grep -H -m 1 . {} \; | \
+	@find . -type f -name '*.go' -exec grep -H -m 1 . {} \; | \
 	    grep -v '/vendor/' | \
 	    (! grep -v "// Copyright (C) .*$$(date +%Y) Betalo AB - All Rights Reserved")
 
@@ -31,7 +31,13 @@ install:
 
 .PHONY: lint
 lint:
-	gometalinter \
+	@if [ $$(gofmt -l . | grep -v vendor/ | wc -l) != 0 ]; then \
+	    echo "gofmt: code not formatted"; \
+	    gofmt -l . | grep -v vendor/; \
+	    exit 1; \
+	fi
+
+	@gometalinter \
 	    --vendor \
 	    --tests \
 	    --disable=gocyclo \
@@ -49,4 +55,4 @@ lint:
 
 .PHONY: test
 test:
-	go test -v -race ./internal/...
+	go test -v -race ./...
