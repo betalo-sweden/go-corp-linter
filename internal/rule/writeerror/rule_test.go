@@ -57,7 +57,7 @@ func Test_findMissingReturn(t *testing.T) {
 					fmt.Println("dummy text")
 				}
 				`,
-			expected: "main.go:14:6: missing return statement after writeError call\n",
+			expected: "main.go:13:7: missing return statement after writeError call\n",
 		},
 	}
 

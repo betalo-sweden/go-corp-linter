@@ -51,6 +51,7 @@ type FindMissingReturnsVisitor struct {
 	stateLevels map[int]int
 	level       int
 	state       int
+	lastFound   token.Position
 }
 
 // Visit implements the NodeVisitor interface.
@@ -85,6 +86,7 @@ func (v *FindMissingReturnsVisitor) Visit(n ast.Node) bool {
 				// fmt.Println("Debug: Found CallExpr")
 				v.state = 7
 				v.stateLevels[v.state] = v.level
+				v.lastFound = v.fset.Position(n.Pos())
 				return false
 			}
 		}
@@ -97,10 +99,13 @@ func (v *FindMissingReturnsVisitor) Visit(n ast.Node) bool {
 				return false
 			}
 		}
+
+		position := v.lastFound
+		position.Line++ // Report the next line
 		fmt.Fprintf(v.out, "%s:%d:%d: missing return statement after writeError call\n",
-			v.fset.Position(n.Pos()).Filename,
-			v.fset.Position(n.Pos()).Line,
-			v.fset.Position(n.Pos()).Column)
+			position.Filename,
+			position.Line,
+			position.Column)
 	}
 
 	v.state = 0 // Reset
