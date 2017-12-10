@@ -102,10 +102,7 @@ func (v *FindMissingReturnsVisitor) Visit(n ast.Node) bool {
 
 		position := v.lastFound
 		position.Line++ // Report the next line
-		fmt.Fprintf(v.out, "%s:%d:%d: missing return statement after writeError call\n",
-			position.Filename,
-			position.Line,
-			position.Column)
+		fmt.Fprintf(v.out, "%s: missing return statement after writeError call\n", position)
 	}
 
 	v.state = 0 // Reset
