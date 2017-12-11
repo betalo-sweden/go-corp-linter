@@ -37,14 +37,8 @@ func processImports(f *ast.File, fset *token.FileSet, out io.Writer) {
 }
 
 type importStmt struct {
-	pkg string
-	loc location
-}
-
-type location struct {
-	filename string
-	line     int
-	col      int
+	pkg      string
+	position token.Position
 }
 
 func parse(f *ast.File, fset *token.FileSet) []importStmt {
@@ -52,14 +46,10 @@ func parse(f *ast.File, fset *token.FileSet) []importStmt {
 
 	for _, i := range f.Imports {
 		pos := i.Path.ValuePos
-		loc := location{
-			filename: fset.Position(pos).Filename,
-			line:     fset.Position(pos).Line,
-			col:      fset.Position(pos).Column,
-		}
+		position := fset.Position(pos)
 		imports = append(imports, importStmt{
-			pkg: strings.Trim(i.Path.Value, `"`),
-			loc: loc,
+			pkg:      strings.Trim(i.Path.Value, `"`),
+			position: position,
 		})
 	}
 
@@ -87,15 +77,15 @@ func ordered(imports []importStmt) []importStmt {
 	// Compact
 	for i := range stdlibs {
 		if i > 0 {
-			stdlibs[i].loc.line = stdlibs[i-1].loc.line + 1
+			stdlibs[i].position.Line = stdlibs[i-1].position.Line + 1
 		}
 	}
 	if len(stdlibs) > 0 && len(others) > 0 {
-		others[0].loc.line = stdlibs[len(stdlibs)-1].loc.line + 2
+		others[0].position.Line = stdlibs[len(stdlibs)-1].position.Line + 2
 	}
 	for i := range others {
 		if i > 0 {
-			others[i].loc.line = others[i-1].loc.line + 1
+			others[i].position.Line = others[i-1].position.Line + 1
 		}
 	}
 
@@ -113,6 +103,5 @@ func compare(given, expected []importStmt) int {
 }
 
 func report(out io.Writer, i importStmt) {
-	fmt.Fprintf(out, "%s:%d:%d: incorrectly sorted import package: %s\n",
-		i.loc.filename, i.loc.line, i.loc.col, i.pkg)
+	fmt.Fprintf(out, "%s: incorrectly sorted import package: %s\n", i.position, i.pkg)
 }
