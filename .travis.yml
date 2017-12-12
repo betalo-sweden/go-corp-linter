@@ -13,6 +13,7 @@ install:
   - make deps
 
 script:
+  - make copyright
   - make install lint
   - make build
   - make test
