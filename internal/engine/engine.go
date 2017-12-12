@@ -10,12 +10,14 @@ import (
 	"strings"
 
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
+	"github.com/betalo-sweden/go-corp-linter/internal/rule/sqlstatement"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
 )
 
 var rules = []func(fp string, out io.Writer) error{
 	imports.ProcessFile,
 	writeerror.ProcessFile,
+	sqlstatement.ProcessFile,
 }
 
 // Process walks a given sequence of directories and tries to identify rule
