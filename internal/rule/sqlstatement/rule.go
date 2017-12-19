@@ -3,6 +3,7 @@
 package sqlstatement
 
 import (
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -10,6 +11,10 @@ import (
 	"log"
 	"strings"
 )
+
+type sqlStmt struct {
+	position token.Position
+}
 
 // ProcessFile checks for SQL statements that contain undesired tabs indentation
 // instead of spaces.
@@ -28,13 +33,17 @@ func ProcessFile(fp string, out io.Writer) error {
 func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) {
 	ast.Inspect(f, func(node ast.Node) bool {
 		if assignStmt, ok := node.(*ast.AssignStmt); ok {
+			variableName := ""
+
 			if len(assignStmt.Lhs) != 1 {
 				return true
 			}
 			if ident, ok := assignStmt.Lhs[0].(*ast.Ident); ok {
-				if ident.Obj.Kind != ast.Var || ident.Obj.Name != "stmt" {
+				if ident.Obj.Kind != ast.Var {
 					return true
 				}
+
+				variableName = ident.Obj.Name
 			}
 
 			if len(assignStmt.Rhs) != 1 {
@@ -48,31 +57,36 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 					!strings.HasSuffix(basicLit.Value, "`") {
 					return true
 				}
+				sqlStatementFound := false
+				for _, sqlStatementPrefix := range sqlStatementPrefixes {
+					if strings.Contains(basicLit.Value, sqlStatementPrefix) {
+						sqlStatementFound = true
+						break
+					}
+				}
+				if !sqlStatementFound {
+					return true
+				}
+
+				pos := fset.Position(assignStmt.TokPos)
+
+				if sqlStatementFound && variableName != "stmt" {
+					reportInproperVariableName(out, pos, variableName)
+				}
+
+				if strings.Contains(basicLit.Value, "\t") {
+					reportTab(out, pos)
+				}
 			}
 		}
 		return true
-
-		//*ast.AssignStmt {
-		//	Lhs: []ast.Expr (len = 1) {
-		//		0: *ast.Ident {
-		//			NamePos: 4:5
-		//			Name: "stmt"
-		//			Obj: *ast.Object {
-		//				Kind: var
-		//				Name: "stmt"
-		//				Decl: *(obj @ 27)
-		//			}
-		//		}
-		//	}
-		//	TokPos: 4:10
-		//	Tok: :=
-		//	Rhs: []ast.Expr (len = 1) {
-		//		0: *ast.BasicLit {
-		//			ValuePos: 4:13
-		//			Kind: STRING
-		//			Value: "`\nSELECT\n    foo\nFROM\n   bar\n`"
-		//		}
-		//	}
-		//}
 	})
+}
+
+func reportTab(out io.Writer, position token.Position) {
+	fmt.Fprintf(out, "%s: sql query contains tabs \n", position)
+}
+
+func reportInproperVariableName(out io.Writer, position token.Position, variableName string) {
+	fmt.Fprintf(out, "%s: sql query variable is not named stmt but instead %s\n", position, variableName)
 }

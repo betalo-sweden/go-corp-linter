@@ -1,3 +1,158 @@
 // Copyright (C) 2017 Betalo AB - All Rights Reserved
 
 package sqlstatement
+
+import (
+	"bufio"
+	"bytes"
+	"go/parser"
+	"go/token"
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+)
+
+func TestProcessImports(t *testing.T) {
+	var testcases = []struct {
+		name     string
+		given    string
+		expected string
+	}{
+		{
+			name: "tab",
+			given: `
+			SELECT
+			id,
+			universal_customer_id,
+			card_id,
+			type,
+			amount_number,
+			amount_currency_code,
+			place,
+			external_transaction_id,
+			created_at
+			FROM transactions
+			WHERE id=$1`,
+			expected: "main.go:4:7: sql query contains tabs",
+		},
+		{
+			name: "tab on last line",
+			given: `
+            SELECT
+            id,
+            universal_customer_id,
+            card_id,
+            type,
+            amount_number,
+            amount_currency_code,
+            place,
+            external_transaction_id,
+            created_at
+            FROM transactions
+			WHERE id=$1`,
+			expected: "main.go:4:7: sql query contains tabs",
+		},
+		{
+			name: "tab on last line 2",
+			given: `
+            SELECT
+            id,
+            universal_customer_id,
+            card_id,
+            type,
+            amount_number,
+            amount_currency_code,
+            place,
+            external_transaction_id,
+            created_at
+            FROM transactions
+            WHERE id=$1
+			`,
+			expected: "main.go:4:7: sql query contains tabs",
+		},
+		{
+			name: "tab on first line",
+			given: `
+			SELECT
+            id,
+            universal_customer_id,
+            card_id,
+            type,
+            amount_number,
+            amount_currency_code,
+            place,
+            external_transaction_id,
+            created_at
+            FROM transactions
+            WHERE id=$1`,
+			expected: "main.go:4:7: sql query contains tabs",
+		},
+		{
+			name: "space",
+			given: `
+            SELECT
+            id,
+            universal_customer_id,
+            card_id,
+            type,
+            amount_number,
+            amount_currency_code,
+            place,
+            external_transaction_id,
+            created_at
+            FROM transactions
+            WHERE id=$1`,
+			expected: "",
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(t *testing.T) {
+			fset := token.NewFileSet()
+			source := `package main
+
+func main() {
+	stmt := ` + "`" + tc.given + "`" + `
+}`
+			f, err := parser.ParseFile(fset, "main.go", source, 0)
+			require.NoError(t, err)
+
+			var b bytes.Buffer
+			w := bufio.NewWriter(&b)
+			findMalformedSQLStatements(f, fset, w)
+			require.NoError(t, w.Flush())
+			assert.Equal(t, tc.expected, strings.TrimSpace(b.String()))
+		})
+	}
+}
+
+func TestProcessImportsWrongVariableName(t *testing.T) {
+	fset := token.NewFileSet()
+	source := `package main
+
+func main() {
+	sql := ` + "`" + `
+            SELECT
+            id,
+            universal_customer_id,
+            card_id,
+            type,
+            amount_number,
+            amount_currency_code,
+            place,
+            external_transaction_id,
+            created_at
+            FROM transactions
+            WHERE id=$1` + "`" + `
+}`
+	f, err := parser.ParseFile(fset, "main.go", source, 0)
+	require.NoError(t, err)
+
+	var b bytes.Buffer
+	w := bufio.NewWriter(&b)
+	findMalformedSQLStatements(f, fset, w)
+	require.NoError(t, w.Flush())
+	assert.Equal(t, "main.go:4:6: sql query variable is not named stmt but instead sql", strings.TrimSpace(b.String()))
+}
