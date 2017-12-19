@@ -10,8 +10,15 @@ import (
 	"strings"
 
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
+	"github.com/betalo-sweden/go-corp-linter/internal/rule/sqlstatement"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
 )
+
+var rules = []func(fp string, out io.Writer) error{
+	imports.ProcessFile,
+	writeerror.ProcessFile,
+	sqlstatement.ProcessFile,
+}
 
 // Process walks a given sequence of directories and tries to identify rule
 // violations.
@@ -55,11 +62,10 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 
 		// Rules
 
-		if err = imports.ProcessFile(fp, out); err != nil {
-			return err
-		}
-		if err = writeerror.ProcessFile(fp, out); err != nil {
-			return err
+		for _, rule := range rules {
+			if err = rule(fp, out); err != nil {
+				return err
+			}
 		}
 
 		return nil
