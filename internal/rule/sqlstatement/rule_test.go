@@ -127,32 +127,3 @@ func main() {
 		})
 	}
 }
-
-func TestProcessImportsWrongVariableName(t *testing.T) {
-	fset := token.NewFileSet()
-	source := `package main
-
-func main() {
-	sql := ` + "`" + `
-            SELECT
-            id,
-            universal_customer_id,
-            card_id,
-            type,
-            amount_number,
-            amount_currency_code,
-            place,
-            external_transaction_id,
-            created_at
-            FROM transactions
-            WHERE id=$1` + "`" + `
-}`
-	f, err := parser.ParseFile(fset, "main.go", source, 0)
-	require.NoError(t, err)
-
-	var b bytes.Buffer
-	w := bufio.NewWriter(&b)
-	findMalformedSQLStatements(f, fset, w)
-	require.NoError(t, w.Flush())
-	assert.Equal(t, "main.go:4:6: sql query variable is not named stmt but instead sql", strings.TrimSpace(b.String()))
-}

@@ -26,11 +26,13 @@ func ProcessFile(fp string, out io.Writer) error {
 	return nil
 }
 
+// findMalformedSQLStatements will find variable that are of type string and check if it contain a sql command.
+// The linter rule is intentionally made strict so if we get false positive you can change the rule to make it more
+// relaxed. One example of this i contain instead of prefix.
+// Two concatenated strings are not supported for the sql statement.
 func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) {
 	ast.Inspect(f, func(node ast.Node) bool {
 		if assignStmt, ok := node.(*ast.AssignStmt); ok {
-			variableName := ""
-
 			if len(assignStmt.Lhs) != 1 {
 				return true
 			}
@@ -38,8 +40,6 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 				if ident.Obj == nil || ident.Obj.Kind != ast.Var {
 					return true
 				}
-
-				variableName = ident.Obj.Name
 			}
 
 			if len(assignStmt.Rhs) != 1 {
@@ -65,13 +65,8 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 				}
 
 				pos := fset.Position(assignStmt.TokPos)
-
-				if sqlStatementFound && variableName != "stmt" {
-					reportImproperVariableName(out, pos, variableName)
-				}
-
 				if strings.Contains(basicLit.Value, "\t") {
-					reportTab(out, pos)
+					report(out, pos)
 				}
 			}
 		}
@@ -79,10 +74,6 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 	})
 }
 
-func reportTab(out io.Writer, position token.Position) {
+func report(out io.Writer, position token.Position) {
 	fmt.Fprintf(out, "%s: sql query contain tabs\n", position)
-}
-
-func reportImproperVariableName(out io.Writer, position token.Position, variableName string) {
-	fmt.Fprintf(out, "%s: sql query variable is not named stmt but instead %s\n", position, variableName)
 }
