@@ -67,7 +67,7 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 				pos := fset.Position(assignStmt.TokPos)
 
 				if sqlStatementFound && variableName != "stmt" {
-					reportInproperVariableName(out, pos, variableName)
+					reportImproperVariableName(out, pos, variableName)
 				}
 
 				if strings.Contains(basicLit.Value, "\t") {
@@ -83,6 +83,6 @@ func reportTab(out io.Writer, position token.Position) {
 	fmt.Fprintf(out, "%s: sql query contain tabs\n", position)
 }
 
-func reportInproperVariableName(out io.Writer, position token.Position, variableName string) {
+func reportImproperVariableName(out io.Writer, position token.Position, variableName string) {
 	fmt.Fprintf(out, "%s: sql query variable is not named stmt but instead%s\n", position, variableName)
 }
