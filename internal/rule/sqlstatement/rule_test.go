@@ -25,15 +25,6 @@ func TestProcessImports(t *testing.T) {
 			given: `
 			SELECT
 			id,
-			universal_customer_id,
-			card_id,
-			type,
-			amount_number,
-			amount_currency_code,
-			place,
-			external_transaction_id,
-			created_at
-			FROM transactions
 			WHERE id=$1`,
 			expected: "main.go:4:7: sql query contain tabs",
 		},
@@ -42,15 +33,6 @@ func TestProcessImports(t *testing.T) {
 			given: `
             SELECT
             id,
-            universal_customer_id,
-            card_id,
-            type,
-            amount_number,
-            amount_currency_code,
-            place,
-            external_transaction_id,
-            created_at
-            FROM transactions
 			WHERE id=$1`,
 			expected: "main.go:4:7: sql query contain tabs",
 		},
@@ -59,15 +41,6 @@ func TestProcessImports(t *testing.T) {
 			given: `
             SELECT
             id,
-            universal_customer_id,
-            card_id,
-            type,
-            amount_number,
-            amount_currency_code,
-            place,
-            external_transaction_id,
-            created_at
-            FROM transactions
             WHERE id=$1
 			`,
 			expected: "main.go:4:7: sql query contain tabs",
@@ -77,15 +50,6 @@ func TestProcessImports(t *testing.T) {
 			given: `
 			SELECT
             id,
-            universal_customer_id,
-            card_id,
-            type,
-            amount_number,
-            amount_currency_code,
-            place,
-            external_transaction_id,
-            created_at
-            FROM transactions
             WHERE id=$1`,
 			expected: "main.go:4:7: sql query contain tabs",
 		},
@@ -94,15 +58,6 @@ func TestProcessImports(t *testing.T) {
 			given: `
             SELECT
             id,
-            universal_customer_id,
-            card_id,
-            type,
-            amount_number,
-            amount_currency_code,
-            place,
-            external_transaction_id,
-            created_at
-            FROM transactions
             WHERE id=$1`,
 			expected: "",
 		},
