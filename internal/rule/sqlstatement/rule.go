@@ -84,5 +84,5 @@ func reportTab(out io.Writer, position token.Position) {
 }
 
 func reportImproperVariableName(out io.Writer, position token.Position, variableName string) {
-	fmt.Fprintf(out, "%s: sql query variable is not named stmt but instead%s\n", position, variableName)
+	fmt.Fprintf(out, "%s: sql query variable is not named stmt but instead %s\n", position, variableName)
 }
