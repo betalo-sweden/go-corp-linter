@@ -35,7 +35,7 @@ func TestProcessImports(t *testing.T) {
 			created_at
 			FROM transactions
 			WHERE id=$1`,
-			expected: "main.go:4:7: sql query contains tabs",
+			expected: "main.go:4:7: sql query contain tabs",
 		},
 		{
 			name: "tab on last line",
@@ -52,7 +52,7 @@ func TestProcessImports(t *testing.T) {
             created_at
             FROM transactions
 			WHERE id=$1`,
-			expected: "main.go:4:7: sql query contains tabs",
+			expected: "main.go:4:7: sql query contain tabs",
 		},
 		{
 			name: "tab on last line 2",
@@ -70,7 +70,7 @@ func TestProcessImports(t *testing.T) {
             FROM transactions
             WHERE id=$1
 			`,
-			expected: "main.go:4:7: sql query contains tabs",
+			expected: "main.go:4:7: sql query contain tabs",
 		},
 		{
 			name: "tab on first line",
@@ -87,7 +87,7 @@ func TestProcessImports(t *testing.T) {
             created_at
             FROM transactions
             WHERE id=$1`,
-			expected: "main.go:4:7: sql query contains tabs",
+			expected: "main.go:4:7: sql query contain tabs",
 		},
 		{
 			name: "space",
