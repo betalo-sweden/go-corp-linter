@@ -20,7 +20,7 @@ deps:
 
 	go get -u github.com/betalo-sweden/go-corp-linter
 	go get -u github.com/alecthomas/gometalinter
-	gometalinter --install --update
+	gometalinter --install
 
 .PHONY: deps-ensure
 deps-ensure:
