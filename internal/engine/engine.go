@@ -71,7 +71,13 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 		if err != nil {
 			return err
 		}
-		if bytes.Equal(b, autogenHeaderPrefix) {
+		header := bytes.TrimSpace(b)
+		if bytes.Equal(header, autogenHeaderPrefix) {
+			return nil
+		}
+
+		// Ignore empty files not having copyright
+		if len(header) == 0 {
 			return nil
 		}
 
