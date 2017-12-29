@@ -10,12 +10,14 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/betalo-sweden/go-corp-linter/internal/rule/copyright"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/sqlstatement"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
 )
 
 var rules = []func(fp string, out io.Writer) error{
+	copyright.ProcessFile,
 	imports.ProcessFile,
 	writeerror.ProcessFile,
 	sqlstatement.ProcessFile,
@@ -69,7 +71,13 @@ func process(root string, out io.Writer, verbose bool) func(fp string, fi os.Fil
 		if err != nil {
 			return err
 		}
-		if bytes.Equal(b, autogenHeaderPrefix) {
+		header := bytes.TrimSpace(b)
+		if bytes.Equal(header, autogenHeaderPrefix) {
+			return nil
+		}
+
+		// Ignore empty files not having copyright
+		if len(header) == 0 {
 			return nil
 		}
 
