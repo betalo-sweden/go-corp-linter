@@ -1,4 +1,4 @@
-# Copyright (C) 2017 Betalo AB - All Rights Reserved
+# Copyright (C) 2017-2018 Betalo AB - All Rights Reserved
 
 ---
 notifications:
@@ -7,7 +7,7 @@ notifications:
 language: go
 
 go:
-  - 1.9
+  - 1.10.x
 
 install:
   - make deps
