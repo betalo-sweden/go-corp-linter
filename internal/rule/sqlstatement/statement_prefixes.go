@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Betalo AB - All Rights Reserved
+// Copyright (C) 2017-2018 Betalo AB - All Rights Reserved
 
 package sqlstatement
 
