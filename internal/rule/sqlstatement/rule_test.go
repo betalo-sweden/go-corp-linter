@@ -61,6 +61,19 @@ func TestProcessImports(t *testing.T) {
             WHERE id=$1`,
 			expected: "",
 		},
+		{
+			name: "multi-line select *",
+			given: `
+            SELECT
+            *
+            WHERE id=$1`,
+			expected: "main.go:4:7: sql query selects '*'",
+		},
+		{
+			name:     "single-line select *",
+			given:    `SELECT * WHERE id=$1`,
+			expected: "main.go:4:7: sql query selects '*'",
+		},
 	}
 
 	for _, tc := range testcases {

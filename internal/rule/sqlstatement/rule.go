@@ -9,6 +9,7 @@ import (
 	"go/token"
 	"io"
 	"log"
+	"regexp"
 	"strings"
 )
 
@@ -26,10 +27,17 @@ func ProcessFile(fp string, out io.Writer) error {
 	return nil
 }
 
-// findMalformedSQLStatements will find variable that are of type string and check if it contain a sql command.
-// The linter rule is intentionally made strict so if we get false positive you can change the rule to make it more
-// relaxed. One example of this i contain instead of prefix.
-// Two concatenated strings are not supported for the sql statement.
+var regexpSelectAsterisk = regexp.MustCompile(`(?i)SELECT\s+\*`)
+
+// findMalformedSQLStatements will find variable that are of type string and
+// check if it contain a sql command. The linter rule is intentionally made
+// strict so if we get false positive you can change the rule to make it more
+// relaxed. One example of this that is uses contains instead of prefix.
+//
+// In addition the rule will check that no SELECT statement selects all columns,
+// i.e. `SELECT *`.
+//
+// Caveats: Two concatenated strings are not supported for the sql statement.
 func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) {
 	ast.Inspect(f, func(node ast.Node) bool {
 		if assignStmt, ok := node.(*ast.AssignStmt); ok {
@@ -66,7 +74,10 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 
 				pos := fset.Position(assignStmt.TokPos)
 				if strings.Contains(basicLit.Value, "\t") {
-					report(out, pos)
+					report(out, pos, "sql query contain tabs")
+				}
+				if regexpSelectAsterisk.FindStringIndex(basicLit.Value) != nil {
+					report(out, pos, "sql query selects '*'")
 				}
 			}
 		}
@@ -74,6 +85,6 @@ func findMalformedSQLStatements(f ast.Node, fset *token.FileSet, out io.Writer) 
 	})
 }
 
-func report(out io.Writer, position token.Position) {
-	fmt.Fprintf(out, "%s: sql query contain tabs\n", position)
+func report(out io.Writer, position token.Position, offense string) {
+	fmt.Fprintf(out, "%s: %s\n", position, offense)
 }
