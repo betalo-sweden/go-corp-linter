@@ -23,8 +23,13 @@ func TestProcessImports(t *testing.T) {
 		expected string
 	}{
 		{
-			name:     "With",
+			name:     "Betalo with year",
 			given:    []byte(`// Copyright (C) ` + currentYear + ` Betalo AB - All Rights Reserved`),
+			expected: "",
+		},
+		{
+			name:     "PFC with period",
+			given:    []byte(`// Copyright (C) 2017-` + currentYear + ` P.F.C. AB - All Rights Reserved`),
 			expected: "",
 		},
 		{
