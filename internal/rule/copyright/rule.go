@@ -9,12 +9,12 @@ import (
 	"io"
 	"os"
 	"regexp"
-	"time"
 )
 
 var (
-	company                     = "Betalo AB"
-	copyrightHeaderPrefixRegexp = regexp.MustCompile(fmt.Sprintf(`// Copyright \([cC]\) .*%d %s - All Rights Reserved`, time.Now().Year(), company))
+	betalo                      = "Betalo AB"
+	pfc                         = "P.F.C. AB"
+	copyrightHeaderPrefixRegexp = regexp.MustCompile(fmt.Sprintf(`// Copyright \([cC]\) .*20[1-9][0-9] %s|%s - All Rights Reserved`, betalo, pfc))
 )
 
 // ProcessFile checks for copyright headers in Go files.
