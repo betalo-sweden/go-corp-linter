@@ -53,6 +53,8 @@ lint:
 	    --disable=varcheck \
 	    --disable=gas \
 	    --disable=megacheck \
+	    --disable=gosec \
+	    --disable=errcheck \
 	    --enable=go-corp-linter \
 	    --linter='go-corp-linter:go-corp-linter:PATH:LINE:COL:MESSAGE' \
 	    ./internal/...
