@@ -33,6 +33,11 @@ func TestProcessImports(t *testing.T) {
 			expected: "",
 		},
 		{
+			name:     "Simple",
+			given:    []byte(`// © 2019 PFC Technology AB`),
+			expected: "",
+		},
+		{
 			name:     "Without",
 			given:    []byte(`package main`),
 			expected: "dummy.go:1:1: Missing copyright header",
