@@ -10,14 +10,12 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/betalo-sweden/go-corp-linter/internal/rule/copyright"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/sqlstatement"
 	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
 )
 
 var rules = []func(fp string, out io.Writer) error{
-	copyright.ProcessFile,
 	imports.ProcessFile,
 	writeerror.ProcessFile,
 	sqlstatement.ProcessFile,

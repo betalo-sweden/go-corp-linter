@@ -33,7 +33,6 @@ func TestWalk(t *testing.T) {
 	// Assert
 
 	assert.Contains(t, buf.String(), `testdata/foo/bar/main.go`)
-	assert.Contains(t, buf.String(), `testdata/foo/bar/nocopyright.go`)
 	assert.NotContains(t, buf.String(), `testdata/foo/bar/main.js`)
 	assert.NotContains(t, buf.String(), `testdata/foo/bar/auto.go`)
 	assert.NotContains(t, buf.String(), `testdata/vendor/foo/bar/main.go`)
