@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/betalo-sweden/go-corp-linter/internal/engine"
+	"github.com/betalo-org/go-corp-linter/internal/engine"
 )
 
 func init() {

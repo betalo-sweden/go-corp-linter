@@ -10,9 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/betalo-sweden/go-corp-linter/internal/rule/imports"
-	"github.com/betalo-sweden/go-corp-linter/internal/rule/sqlstatement"
-	"github.com/betalo-sweden/go-corp-linter/internal/rule/writeerror"
+	"github.com/betalo-org/go-corp-linter/internal/rule/imports"
+	"github.com/betalo-org/go-corp-linter/internal/rule/sqlstatement"
+	"github.com/betalo-org/go-corp-linter/internal/rule/writeerror"
 )
 
 var rules = []func(fp string, out io.Writer) error{

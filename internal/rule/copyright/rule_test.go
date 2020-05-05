@@ -28,13 +28,13 @@ func TestProcessImports(t *testing.T) {
 			expected: "",
 		},
 		{
-			name:     "PFC with period",
-			given:    []byte(`// Copyright (C) 2017-` + currentYear + ` P.F.C. AB - All Rights Reserved`),
+			name:     "Betalo with period",
+			given:    []byte(`// Copyright (C) 2017-` + currentYear + ` Betalo AB - All Rights Reserved`),
 			expected: "",
 		},
 		{
 			name:     "Simple",
-			given:    []byte(`// © 2019 PFC Technology AB`),
+			given:    []byte(`// © Betalo AB`),
 			expected: "",
 		},
 		{
